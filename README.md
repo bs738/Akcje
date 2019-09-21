@@ -1,2 +1,2 @@
 # Akcje
-Akcje w języku angielskim oraz przetłumaczone na język polski.
+Akcje w języku angielskim oraz przetłumaczone na język polski (wkrótce).
