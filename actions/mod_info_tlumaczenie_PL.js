@@ -1,10 +1,10 @@
 module.exports = {
 
-name: "Tlumaczenie na jezyk polski",
+name: "Tłumaczenie na język polski",
 section: "#Mod Information",
 
 subtitle: function(data) {
-return `Informacje o tlumaczeniu`;
+return `Tłumaczenie na język polski`;
 },
 author: "Lego#8486",
 version: "1.0",

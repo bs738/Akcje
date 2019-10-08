@@ -6,7 +6,7 @@ module.exports = {
 // This is the name of the action displayed in the editor.
 //---------------------------------------------------------------------
 
-name: "Delete Server Data MOD",
+name: "Delete Server Data",
 
 //---------------------------------------------------------------------
 // Action Section

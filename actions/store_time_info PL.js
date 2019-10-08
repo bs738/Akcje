@@ -6,7 +6,7 @@ module.exports = {
 // This is the name of the action displayed in the editor.
 //---------------------------------------------------------------------
 
-name: "Delete Member Data",
+name: "Store Time Info PL",
 
 //---------------------------------------------------------------------
 // Action Section
@@ -14,7 +14,7 @@ name: "Delete Member Data",
 // This is the section the action will fall into.
 //---------------------------------------------------------------------
 
-section: "Deprecated",
+section: "Other Stuff",
 
 //---------------------------------------------------------------------
 // Action Subtitle
@@ -23,13 +23,25 @@ section: "Deprecated",
 //---------------------------------------------------------------------
 
 subtitle: function(data) {
-	const members = ['Mentioned User', 'Command Author', 'Temp Variable', 'Server Variable', 'Global Variable'];
-	return `${members[parseInt(data.member)]} - ${data.dataName}`;
+	const time = ['Year', 'Month (Number)', 'Day of the Month', 'Hour', 'Minute', 'Second', 'Milisecond', 'Month (text)'];
+	return `${time[parseInt(data.type)]}`;
 },
 
-//https://github.com/LeonZ2019/
-author: "LeonZ",
-version: "1.1.0",
+//---------------------------------------------------------------------
+// Action Storage Function
+//
+// Stores the relevant variable info for the editor.
+//---------------------------------------------------------------------
+
+variableStorage: function(data, varType) {
+	const type = parseInt(data.storage);
+	if(type !== varType) return;
+	let result = "Number";
+	if(data.type === "7") {
+		result = "Text";
+	}
+	return ([data.varName, result]);
+},
 
 //---------------------------------------------------------------------
 // Action Fields
@@ -39,7 +51,7 @@ version: "1.1.0",
 // are also the names of the fields stored in the action's JSON data.
 //---------------------------------------------------------------------
 
-fields: ["member", "varName", "dataName"],
+fields: ["type", "storage", "varName"],
 
 //---------------------------------------------------------------------
 // Command HTML
@@ -60,21 +72,30 @@ fields: ["member", "varName", "dataName"],
 html: function(isEvent, data) {
 	return `
 <div>
-	<div style="float: left; width: 35%;">
-		Member:<br>
-		<select id="member" class="round" onchange="glob.memberChange(this, 'varNameContainer')">
-			${data.members[isEvent ? 1 : 0]}
+	<div style="padding-top: 8px; width: 70%;">
+		Time Info:<br>
+		<select id="type" class="round">
+			<option value="0" selected>Year</option>
+			<option value="1">Month (Number)</option>
+			<option value="7">Month (Text)</option>
+			<option value="2">Day of the Month</option>
+			<option value="3">Hour</option>
+			<option value="4">Minute</option>
+			<option value="5">Second</option>
+			<option value="6">Milisecond</option>
 		</select>
 	</div>
-	<div id="varNameContainer" style="display: none; float: right; width: 60%;">
-		Variable Name:<br>
-		<input id="varName" class="round" type="text" list="variableList">
+</div><br>
+<div>
+	<div style="float: left; width: 35%;">
+		Store In:<br>
+		<select id="storage" class="round">
+			${data.variables[1]}
+		</select>
 	</div>
-</div><br><br><br>
-<div style="padding-top: 8px;">
-	<div style="float: left; width: 80%;">
-		Data Name:<br>
-		<input id="dataName" class="round" placeholder="Leave it blank to delete all data" type="text">
+	<div id="varNameContainer" style="float: right; width: 60%;">
+		Variable Name:<br>
+		<input id="varName" class="round" type="text"><br>
 	</div>
 </div>`
 },
@@ -88,9 +109,6 @@ html: function(isEvent, data) {
 //---------------------------------------------------------------------
 
 init: function() {
-	const {glob, document} = this;
-
-	glob.memberChange(document.getElementById('member'), 'varNameContainer');
 },
 
 //---------------------------------------------------------------------
@@ -102,22 +120,42 @@ init: function() {
 //---------------------------------------------------------------------
 
 action: function(cache) {
-	const Files = this.getDBM().Files;
 	const data = cache.actions[cache.index];
-	const type = parseInt(data.member);
-	const varName = this.evalMessage(data.varName, cache);
-	const member = this.getMember(type, varName, cache);
-	const id = member.id;
-	if(member && member.data) {
-		const dataName = this.evalMessage(data.dataName, cache);
-		if(dataName === undefined) {
-			Files.data.players[id] = {};
-		} else {
-			const memberData = Files.data.players[id];
-			delete memberData[dataName];
-			Files.data.players[id] = memberData; 
-		}
-		Files.saveData("players");
+	const type = parseInt(data.type);
+	let result;
+	switch(type) {
+		case 0:
+			result = new Date().getFullYear();
+			break;
+		case 1:
+			result = new Date().getMonth() + 1;
+			break;
+		case 2:
+			result = new Date().getDate();
+			break;
+		case 3:
+			result = new Date().getHours();
+			break;
+		case 4:
+			result = new Date().getMinutes();
+			break;
+		case 5:
+			result = new Date().getSeconds();
+			break;
+		case 6:
+			result = new Date().getMiliseconds();
+			break;
+		case 7:
+			const months = ["stycznia","lutego","marca","kwietnia","maja","czerwca","lipca","sierpnia","września","października","listopada","grudnia"];
+			result = months[(new Date().getMonth())];
+		default:
+			break;
+	}
+	//console.log((new Date()).year)
+	if(result !== undefined) {
+		const storage = parseInt(data.storage);
+		const varName = this.evalMessage(data.varName, cache);
+		this.storeValue(result, storage, varName, cache);
 	}
 	this.callNextAction(cache);
 },
