@@ -217,19 +217,19 @@ module.exports = {
 				break;
 			case 8:
 				result = date.slice(4, 7);
-				if (result == 'Jan') {result = 1;}
-				if (result == 'Feb') {result = 2;}
-				if (result == 'Mar') {result = 3;}
-				if (result == 'Apr') {result = 4;}
-				if (result == 'May') {result = 5;}
-				if (result == 'Jun') {result = 6;}
-				if (result == 'Jul') {result = 7;}
-				if (result == 'Aug') {result = 8;}
-				if (result == 'Sep') {result = 9;}
-				if (result == 'Oct') {result = 10;}
-				if (result == 'Nov') {result = 11;}
-				if (result == 'Dec') {result = 12;}
-				if (result == date.slice(4, 7)) {
+                if (result == 'Jan') {result = 'stycznia';}
+                if (result == 'Feb') {result = 'lutego';}
+                if (result == 'Mar') {result = 'marca';}
+                if (result == 'Apr') {result = 'kwietnia';}
+                if (result == 'May') {result = 'maja';}
+                if (result == 'Jun') {result = 'czerwca';}
+                if (result == 'Jul') {result = 'lipca';}
+                if (result == 'Aug') {result = 'sierpnia';}
+                if (result == 'Sep') {result = 'września';}
+                if (result == 'Oct') {result = 'października';}
+                if (result == 'Nov') {result = 'listopada';}
+                if (result == 'Dec') {result = 'grudnia';}
+                if (result == date.slice(4, 7)) {
 					console.log('An error occured on "Store Date Info (Month Number)"')
 					this.callNextAction(cache)
 				}
