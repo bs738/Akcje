@@ -146,7 +146,7 @@ action: function(cache) {
 			result = new Date().getMiliseconds();
 			break;
 		case 7:
-			const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+			const months = ["stycznia","lutego","marca","kwietnia","maja","czerwca","lipca","sierpnia","września","października","listopada","grudnia"];
 			result = months[(new Date().getMonth())];
 		default:
 			break;
